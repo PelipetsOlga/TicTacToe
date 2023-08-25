@@ -27,8 +27,9 @@ class Board extends Equatable {
   late List<Cell> cells;
   int fieldSize;
   int winLength;
+  bool gameWithComp;
 
-  Board(this.fieldSize, this.winLength) {
+  Board(this.fieldSize, this.winLength, this.gameWithComp) {
     _initBoard();
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tic_tac_game/models.dart';
-import 'package:tic_tac_game/view_model.dart';
+import 'package:tic_tac_game/game_model.dart';
 
 import 'board_vidget.dart';
 
@@ -14,12 +14,12 @@ class GameWidget extends StatefulWidget {
 }
 
 class GameWidgetState extends State<GameWidget> {
-  late ViewModel viewModel;
+  late GameModel viewModel;
   late Board board;
 
   @override
   void initState() {
-    viewModel = ViewModel();
+    viewModel = GameModel();
     board = viewModel.board;
     super.initState();
   }
@@ -53,7 +53,7 @@ class GameWidgetState extends State<GameWidget> {
               viewModel.reset();
               setState(() {});
             },
-            child: const Text("Reset"))
+            child: const Icon(Icons.refresh_outlined))
       ]),
     );
   }

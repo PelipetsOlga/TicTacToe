@@ -19,13 +19,22 @@ class CellWidget extends StatelessWidget {
       iconData = Icons.check_box_outline_blank;
     }
 
+    Color iconColor;
+    if (symbol == TicTacSymbol.cross) {
+      iconColor = Colors.deepPurple;
+    } else if (symbol == TicTacSymbol.oval) {
+      iconColor = Colors.pinkAccent;
+    } else {
+      iconColor = Colors.grey;
+    }
+
     return GestureDetector(
       onTap: callback,
       child: Container(
         width: 64,
         height: 64,
         color: isWinner? Colors.amberAccent: Colors.white,
-        child: Icon(iconData),
+        child: Icon(iconData, color: iconColor),
       ),
     );
   }
