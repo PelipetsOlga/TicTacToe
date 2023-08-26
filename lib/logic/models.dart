@@ -4,11 +4,52 @@ enum TicTacSymbol { cross, oval, none }
 
 enum Level { easy, middle, hard }
 
-enum WhosTurnBeFirst { me, opponent }
+enum WhosTurnBeFirst { me, opponent, alternately }
 
 // First and second number is the size of board
 // Third number is the size of line to win
 enum GameType { g_3_3_3, g_4_4_3, g_5_5_3, g_5_5_4, g_5_5_5, g_6_6_4 }
+
+extension GameTypeExtension on GameType {
+
+  int get fieldSize {
+    switch (this) {
+      case GameType.g_3_3_3:
+        return 3;
+      case GameType.g_4_4_3:
+        return 4;
+      case GameType.g_5_5_3:
+        return 5;
+      case GameType.g_5_5_4:
+        return 5;
+      case GameType.g_5_5_5:
+        return 5;
+      case GameType.g_6_6_4:
+        return 6;
+      default:
+        return 3;
+    }
+  }
+
+  int get winLength {
+    switch (this) {
+      case GameType.g_3_3_3:
+        return 3;
+      case GameType.g_4_4_3:
+        return 3;
+      case GameType.g_5_5_3:
+        return 3;
+      case GameType.g_5_5_4:
+        return 4;
+      case GameType.g_5_5_5:
+        return 5;
+      case GameType.g_6_6_4:
+        return 4;
+      default:
+        return 3;
+    }
+  }
+}
 
 class Point extends Equatable {
   final int x;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tic_tac_game/logic/game_repository.dart';
 import 'package:tic_tac_game/logic/models.dart';
 import 'package:tic_tac_game/logic/game_model.dart';
 
@@ -17,16 +19,14 @@ class GameWidget extends StatefulWidget {
 class GameWidgetState extends State<GameWidget> {
   late GameModel viewModel;
   late Board board;
-
-  @override
-  void initState() {
-    viewModel = GameModel();
-    board = viewModel.board;
-    super.initState();
-  }
+  late GameRepository repository;
 
   @override
   Widget build(BuildContext context) {
+    // repository = GetIt.instance.get<GameRepository>();
+    // viewModel = await repository.provideGameModel();
+    viewModel = GameModel(Level.easy, WhosTurnBeFirst.me, GameType.g_6_6_4, true);
+    board = viewModel.board;
     IconData iconData;
     if (viewModel.nextSymbol == TicTacSymbol.cross) {
       iconData = Icons.close_rounded;

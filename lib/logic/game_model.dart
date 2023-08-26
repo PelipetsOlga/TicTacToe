@@ -1,17 +1,21 @@
 
 import 'package:tic_tac_game/logic/models.dart';
-import 'package:tic_tac_game/utils.dart';
+import 'package:tic_tac_game/logic/utils.dart';
 
 class GameModel {
   late Board board;
   late TicTacSymbol nextSymbol;
+  Level level;
+  WhosTurnBeFirst whoFirst;
+  GameType gameType;
+  bool gameWithComp;
 
-  GameModel() {
+  GameModel(this.level, this.whoFirst, this.gameType, this.gameWithComp) {
     reset();
   }
 
   void reset() {
-    board = Board(6, 4, true);
+    board = Board(gameType.fieldSize, gameType.winLength, gameWithComp);
     nextSymbol = TicTacSymbol.cross;
   }
 

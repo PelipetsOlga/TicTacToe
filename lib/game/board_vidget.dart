@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tic_tac_game/wigets/cell_widget.dart';
+import 'package:tic_tac_game/game/cell_widget.dart';
 import 'package:tic_tac_game/logic/models.dart';
 
 typedef CellTapCallback = void Function(Point point);

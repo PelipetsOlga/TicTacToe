@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:tic_tac_game/wigets/game_settings_widget.dart';
-import 'package:tic_tac_game/wigets/home_settings_widget.dart';
-import 'package:tic_tac_game/wigets/home_widget.dart';
+import 'package:get_it/get_it.dart';
+import 'package:tic_tac_game/routers.dart';
 
-import 'wigets/game_widget.dart';
+import 'logic/game_repository.dart';
+
+
+GetIt getIt = GetIt.instance;
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  getIt.registerSingleton<GameRepository>(GameRepositoryImpl(), signalsReady: true);
   runApp(const MyApp());
 }
 
@@ -16,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: _router,
+      routerConfig: routers,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -25,28 +28,3 @@ class MyApp extends StatelessWidget {
   }
 }
 
-final _router = GoRouter(
-  initialLocation: '/',
-  routes: [
-    GoRoute(
-      name: 'home',
-      path: '/',
-      builder: (context, state) => HomeWidget(),
-    ),
-    GoRoute(
-      name: 'home_settings',
-      path: '/home_settings',
-      builder: (context, state) => const HomeSettingsWidget(),
-    ),
-    GoRoute(
-      name: 'game_settings',
-      path: '/game_settings',
-      builder: (context, state) => const GameSettingsWidget(),
-    ),
-    GoRoute(
-      name: 'game',
-      path: '/game',
-      builder: (context, state) => const GameWidget(),
-    ),
-  ],
-);
