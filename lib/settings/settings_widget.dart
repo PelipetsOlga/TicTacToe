@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tic_tac_game/logic/game_repository.dart';
+import 'package:tic_tac_game/settings/game_with_comp_bloc/bloc_event.dart';
+import 'package:tic_tac_game/settings/game_with_comp_bloc/settings_bloc.dart';
+import 'package:tic_tac_game/settings/game_with_comp_level_widget.dart';
 import 'package:tic_tac_game/settings/level_bloc/bloc_event.dart';
 import 'package:tic_tac_game/settings/settings_level_widget.dart';
 
@@ -24,6 +27,13 @@ abstract class SettingsWidget extends StatelessWidget {
                     GetLevel(),
                   ),
               ),
+              BlocProvider<SettingsGameWithCompBloc>(
+                create: (context) => SettingsGameWithCompBloc(
+                  gameRepository: context.read<GameRepository>(),
+                )..add(
+                    GetGameWithComp(),
+                  ),
+              ),
             ], child: SettingsLayout(getBackLink()))));
   }
 
@@ -39,7 +49,7 @@ class SettingsLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: const Text('Settings'),
         centerTitle: true,
       ),
       body: Center(
@@ -47,9 +57,11 @@ class SettingsLayout extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SettingsLevelWidget(),
+            const SettingsLevelWidget(),
+            const SettingsGameWithCompWidget(),
             OutlinedButton(
-                onPressed: () => context.go(backLink), child: Text('Back')),
+                onPressed: () => context.go(backLink),
+                child: const Text('Back')),
           ],
         ),
       ),
