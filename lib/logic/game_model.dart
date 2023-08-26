@@ -1,5 +1,5 @@
 
-import 'package:tic_tac_game/models.dart';
+import 'package:tic_tac_game/logic/models.dart';
 import 'package:tic_tac_game/utils.dart';
 
 class GameModel {

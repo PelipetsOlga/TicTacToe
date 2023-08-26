@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'models.dart';
+import '../logic/models.dart';
 
 class CellWidget extends StatelessWidget {
   TicTacSymbol symbol;

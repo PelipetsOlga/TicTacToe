@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'models.dart';
+import 'logic/models.dart';
 
 bool checkProgressionContinuity(List<int> sortedList) {
   return sortedList.last - sortedList.first == sortedList.length - 1;

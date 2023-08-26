@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tic_tac_game/models.dart';
-import 'package:tic_tac_game/game_model.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tic_tac_game/logic/models.dart';
+import 'package:tic_tac_game/logic/game_model.dart';
 
 import 'board_vidget.dart';
 
@@ -53,7 +54,11 @@ class GameWidgetState extends State<GameWidget> {
               viewModel.reset();
               setState(() {});
             },
-            child: const Icon(Icons.refresh_outlined))
+            child: const Icon(Icons.refresh_outlined)),
+        OutlinedButton(
+            onPressed: () => context.go('/game_settings'),
+            child: Text('Settings')),
+        OutlinedButton(onPressed: () => context.go('/'), child: Text('Back')),
       ]),
     );
   }
