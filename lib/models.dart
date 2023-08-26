@@ -2,6 +2,14 @@ import 'package:equatable/equatable.dart';
 
 enum TicTacSymbol { cross, oval, none }
 
+enum Level { easy, middle, hard }
+
+enum WhosTurnBeFirst { me, opponent }
+
+// First and second number is the size of board
+// Third number is the size of line to win
+enum GameType { g_3_3_3, g_4_4_3, g_5_5_3, g_5_5_4, g_5_5_5, g_6_6_4 }
+
 class Point extends Equatable {
   final int x;
   final int y;
