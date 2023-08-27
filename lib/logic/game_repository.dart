@@ -5,6 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class GameRepository {
   Future<GameModel> provideGameModel();
 
+  GameModel resetGameModel();
+
+  GameModel onCellTapped(Point point);
+
   Future<Level> getLevel();
 
   Future<void> setLevel(Level level);
@@ -25,13 +29,28 @@ abstract class GameRepository {
 class GameRepositoryImpl extends GameRepository {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
+  late GameModel gameModel;
+
   @override
   Future<GameModel> provideGameModel() async {
     Level level = await getLevel();
     WhosTurnBeFirst who = await whosTurnBeFirst();
     GameType type = await gameType();
     bool gameWithComp = await isGameWithComp();
-    return GameModel(level, who, type, gameWithComp);
+    gameModel = GameModel(level, who, type, gameWithComp);
+    return gameModel;
+  }
+
+  @override
+  GameModel resetGameModel(){
+    gameModel.reset();
+    return gameModel;
+  }
+
+  @override
+  GameModel onCellTapped(Point point){
+    gameModel.onCellTapped(point);
+    return gameModel;
   }
 
   @override

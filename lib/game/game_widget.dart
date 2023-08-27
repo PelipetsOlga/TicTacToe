@@ -1,32 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tic_tac_game/game/bloc/bloc_state.dart';
 import 'package:tic_tac_game/logic/game_repository.dart';
 import 'package:tic_tac_game/logic/models.dart';
 import 'package:tic_tac_game/logic/game_model.dart';
 
+import 'bloc/bloc_event.dart';
+import 'bloc/game_bloc.dart';
 import 'board_vidget.dart';
 
-class GameWidget extends StatefulWidget {
+class GameWidget extends StatelessWidget {
   const GameWidget({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return GameWidgetState();
+  Widget build(BuildContext context) {
+    return RepositoryProvider(
+        create: (context) => GetIt.instance.get<GameRepository>(),
+        child: MultiBlocProvider(providers: [
+          BlocProvider<GameModelBloc>(
+            create: (context) => GameModelBloc(
+              gameRepository: context.read<GameRepository>(),
+            )..add(
+                GetGameModel(),
+              ),
+          ),
+        ], child: const GameLayoutProvider()));
   }
 }
 
-class GameWidgetState extends State<GameWidget> {
-  late GameModel viewModel;
-  late Board board;
-  late GameRepository repository;
+class GameLayoutProvider extends StatelessWidget {
+  const GameLayoutProvider({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // repository = GetIt.instance.get<GameRepository>();
-    // viewModel = await repository.provideGameModel();
-    viewModel = GameModel(Level.easy, WhosTurnBeFirst.me, GameType.g_6_6_4, true);
-    board = viewModel.board;
+    return BlocBuilder<GameModelBloc, GameModelState>(
+      buildWhen: (previous, current) => current.status.isSuccess,
+      builder: (context, state) {
+        return GameLayout(state.gameModel ?? defaultGameModel);
+      },
+    );
+  }
+}
+
+class GameLayout extends StatelessWidget {
+  late GameModel viewModel;
+
+  GameLayout(this.viewModel, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
     IconData iconData;
     if (viewModel.nextSymbol == TicTacSymbol.cross) {
       iconData = Icons.close_rounded;
@@ -46,19 +70,18 @@ class GameWidgetState extends State<GameWidget> {
           child: Icon(iconData),
         ),
         BoardWidget(viewModel.board, (point) {
-          viewModel.onCellTapped(point);
-          setState(() {});
+          context.read<GameModelBloc>().add(OnCellTapped(point));
         }),
         OutlinedButton(
             onPressed: () {
-              viewModel.reset();
-              setState(() {});
+              context.read<GameModelBloc>().add(ResetGameModel());
             },
             child: const Icon(Icons.refresh_outlined)),
         OutlinedButton(
             onPressed: () => context.go('/game_settings'),
-            child: Text('Settings')),
-        OutlinedButton(onPressed: () => context.go('/'), child: Text('Back')),
+            child: const Text('Settings')),
+        OutlinedButton(
+            onPressed: () => context.go('/'), child: const Text('Back')),
       ]),
     );
   }

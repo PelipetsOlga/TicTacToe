@@ -1,6 +1,8 @@
-
 import 'package:tic_tac_game/logic/models.dart';
 import 'package:tic_tac_game/logic/utils.dart';
+
+final defaultGameModel =
+    GameModel(Level.easy, WhosTurnBeFirst.alternately, GameType.g_3_3_3, true);
 
 class GameModel {
   late Board board;
@@ -402,5 +404,19 @@ class GameModel {
       }
     } on Exception catch (_) {}
     return results;
+  }
+
+  int crossCount() {
+    return board.cells
+        .where((cell) => cell.symbol == TicTacSymbol.cross)
+        .toList()
+        .length;
+  }
+
+  int ovalCount() {
+    return board.cells
+        .where((cell) => cell.symbol == TicTacSymbol.oval)
+        .toList()
+        .length;
   }
 }

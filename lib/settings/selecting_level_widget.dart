@@ -14,7 +14,7 @@ class SettingsLevelWidget extends StatelessWidget {
     return BlocBuilder<SettingsLevelBloc, LevelState>(
       buildWhen: (previous, current) => current.status.isSuccess,
       builder: (context, state) {
-        return LevelSelectionWidget();
+        return const LevelSelectionWidget();
       },
     );
   }
@@ -31,7 +31,7 @@ class LevelSelectionWidget extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: [
-            Text(
+            const Text(
               'Game Level',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
