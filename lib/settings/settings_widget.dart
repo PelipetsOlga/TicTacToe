@@ -3,12 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tic_tac_game/logic/game_repository.dart';
+import 'package:tic_tac_game/settings/game_type_bloc/bloc_event.dart';
 import 'package:tic_tac_game/settings/game_with_comp_bloc/bloc_event.dart';
 import 'package:tic_tac_game/settings/game_with_comp_bloc/settings_bloc.dart';
-import 'package:tic_tac_game/settings/game_with_comp_level_widget.dart';
+import 'package:tic_tac_game/settings/selecting_game_type_widget.dart';
+import 'package:tic_tac_game/settings/selecting_game_with_comp_widget.dart';
 import 'package:tic_tac_game/settings/level_bloc/bloc_event.dart';
-import 'package:tic_tac_game/settings/settings_level_widget.dart';
+import 'package:tic_tac_game/settings/selecting_level_widget.dart';
+import 'package:tic_tac_game/settings/selecting_who_first_widget.dart';
+import 'package:tic_tac_game/settings/who_first_bloc/bloc_event.dart';
+import 'package:tic_tac_game/settings/who_first_bloc/settings_bloc.dart';
 
+import 'game_type_bloc/settings_bloc.dart';
 import 'level_bloc/settings_bloc.dart';
 
 abstract class SettingsWidget extends StatelessWidget {
@@ -34,6 +40,20 @@ abstract class SettingsWidget extends StatelessWidget {
                     GetGameWithComp(),
                   ),
               ),
+              BlocProvider<SettingsGameTypeBloc>(
+                create: (context) => SettingsGameTypeBloc(
+                  gameRepository: context.read<GameRepository>(),
+                )..add(
+                  GetGameType(),
+                ),
+              ),
+              BlocProvider<SettingsWhoFirstBloc>(
+                create: (context) => SettingsWhoFirstBloc(
+                  gameRepository: context.read<GameRepository>(),
+                )..add(
+                  GetWhoFirst(),
+                ),
+              ),
             ], child: SettingsLayout(getBackLink()))));
   }
 
@@ -43,7 +63,7 @@ abstract class SettingsWidget extends StatelessWidget {
 class SettingsLayout extends StatelessWidget {
   String backLink;
 
-  SettingsLayout(this.backLink);
+  SettingsLayout(this.backLink, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +79,8 @@ class SettingsLayout extends StatelessWidget {
           children: [
             const SettingsLevelWidget(),
             const SettingsGameWithCompWidget(),
+            const SettingsGameTypeWidget(),
+            const SettingsWhoFirstWidget(),
             OutlinedButton(
                 onPressed: () => context.go(backLink),
                 child: const Text('Back')),

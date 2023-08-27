@@ -3,20 +3,26 @@ import 'game_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class GameRepository {
-
   Future<GameModel> provideGameModel();
+
   Future<Level> getLevel();
-  Future<WhosTurnBeFirst> whosTurnBeFirst();
-  Future<GameType> gameType();
+
   Future<void> setLevel(Level level);
+
+  Future<WhosTurnBeFirst> whosTurnBeFirst();
+
   Future<void> setWhosTurnBeFirst(WhosTurnBeFirst who);
+
+  Future<GameType> gameType();
+
   Future<void> setGameType(GameType type);
-  Future<void> setGameWithComp(bool value);
+
   Future<bool> isGameWithComp();
+
+  Future<void> setGameWithComp(bool value);
 }
 
 class GameRepositoryImpl extends GameRepository {
-
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
@@ -44,43 +50,6 @@ class GameRepositoryImpl extends GameRepository {
   }
 
   @override
-  Future<WhosTurnBeFirst> whosTurnBeFirst() async {
-    final SharedPreferences prefs = await _prefs;
-    String type = prefs.getString("game_who_first") ?? "me";
-    WhosTurnBeFirst result;
-    if (type == "me") {
-      result = WhosTurnBeFirst.me;
-    }
-    if (type == "opponent") {
-      result = WhosTurnBeFirst.opponent;
-    } else {
-      result = WhosTurnBeFirst.alternately;
-    }
-    return result;
-  }
-
-  @override
-  Future<GameType> gameType() async {
-    final SharedPreferences prefs = await _prefs;
-    String type = prefs.getString("game_type") ?? "g_6_6_4";
-    GameType result;
-    if (type == "g_3_3_3") {
-      result = GameType.g_3_3_3;
-    } else if (type == "g_4_4_3") {
-      result = GameType.g_4_4_3;
-    } else if (type == "g_5_5_3") {
-      result = GameType.g_5_5_3;
-    } else if (type == "g_5_5_4") {
-      result = GameType.g_5_5_4;
-    } else if (type == "g_5_5_5") {
-      result = GameType.g_5_5_5;
-    } else {
-      result = GameType.g_6_6_4;
-    }
-    return result;
-  }
-
-  @override
   Future<void> setLevel(Level level) async {
     final SharedPreferences prefs = await _prefs;
     String t;
@@ -95,18 +64,59 @@ class GameRepositoryImpl extends GameRepository {
   }
 
   @override
+  Future<WhosTurnBeFirst> whosTurnBeFirst() async {
+    final SharedPreferences prefs = await _prefs;
+    String type = prefs.getString("game_who_first") ?? "me";
+    WhosTurnBeFirst result;
+    if (type == "me") {
+      result = WhosTurnBeFirst.me;
+    } else if (type == "opponent") {
+      result = WhosTurnBeFirst.opponent;
+    } else if (type == "alternately") {
+      result = WhosTurnBeFirst.alternately;
+    } else {
+      result = WhosTurnBeFirst.me;
+    }
+    return result;
+  }
+
+  @override
   Future<void> setWhosTurnBeFirst(WhosTurnBeFirst who) async {
     final SharedPreferences prefs = await _prefs;
     String t;
     if (who == WhosTurnBeFirst.me) {
       t = "me";
-    }
-    if (who == WhosTurnBeFirst.opponent) {
+    } else if (who == WhosTurnBeFirst.opponent) {
       t = "opponent";
-    } else {
+    } else if (who == WhosTurnBeFirst.alternately) {
       t = "alternately";
+    } else {
+      t = "me";
     }
     prefs.setString("game_who_first", t);
+  }
+
+  @override
+  Future<GameType> gameType() async {
+    final SharedPreferences prefs = await _prefs;
+    String type = prefs.getString("game_type") ?? "g_3_3_3";
+    GameType result;
+    if (type == "g_3_3_3") {
+      result = GameType.g_3_3_3;
+    } else if (type == "g_4_4_3") {
+      result = GameType.g_4_4_3;
+    } else if (type == "g_5_5_3") {
+      result = GameType.g_5_5_3;
+    } else if (type == "g_5_5_4") {
+      result = GameType.g_5_5_4;
+    } else if (type == "g_5_5_5") {
+      result = GameType.g_5_5_5;
+    } else if (type == "g_6_6_4") {
+      result = GameType.g_6_6_4;
+    } else {
+      result = GameType.g_3_3_3;
+    }
+    return result;
   }
 
   @override
@@ -130,15 +140,15 @@ class GameRepositoryImpl extends GameRepository {
   }
 
   @override
-  Future<void> setGameWithComp(bool value) async {
-    final SharedPreferences prefs = await _prefs;
-    prefs.setBool("game_with_comp", value);
-  }
-
-  @override
   Future<bool> isGameWithComp() async {
     final SharedPreferences prefs = await _prefs;
     bool type = prefs.getBool("game_with_comp") ?? true;
     return type;
+  }
+
+  @override
+  Future<void> setGameWithComp(bool value) async {
+    final SharedPreferences prefs = await _prefs;
+    prefs.setBool("game_with_comp", value);
   }
 }
