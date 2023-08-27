@@ -9,6 +9,8 @@ abstract class GameRepository {
 
   GameModel onCellTapped(Point point);
 
+  GameModel opponentMove();
+
   Future<Level> getLevel();
 
   Future<void> setLevel(Level level);
@@ -42,14 +44,20 @@ class GameRepositoryImpl extends GameRepository {
   }
 
   @override
-  GameModel resetGameModel(){
+  GameModel resetGameModel() {
     gameModel.reset();
     return gameModel;
   }
 
   @override
-  GameModel onCellTapped(Point point){
+  GameModel onCellTapped(Point point) {
     gameModel.onCellTapped(point);
+    return gameModel;
+  }
+
+  @override
+  GameModel opponentMove(){
+    gameModel.opponentMove();
     return gameModel;
   }
 

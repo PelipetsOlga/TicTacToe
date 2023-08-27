@@ -11,6 +11,7 @@ class GameModel {
   WhosTurnBeFirst whoFirst;
   GameType gameType;
   bool gameWithComp;
+  bool myMoveFirstWhenAlternate = true;
 
   GameModel(this.level, this.whoFirst, this.gameType, this.gameWithComp) {
     reset();
@@ -19,6 +20,16 @@ class GameModel {
   void reset() {
     board = Board(gameType.fieldSize, gameType.winLength, gameWithComp);
     nextSymbol = TicTacSymbol.cross;
+    if (whoFirst == WhosTurnBeFirst.alternately) {
+      myMoveFirstWhenAlternate = !myMoveFirstWhenAlternate;
+    }
+    if (board.gameWithComp &&
+        ((whoFirst == WhosTurnBeFirst.opponent) ||
+            (whoFirst == WhosTurnBeFirst.alternately &&
+                !myMoveFirstWhenAlternate))) {
+      nextSymbol = TicTacSymbol.oval;
+      compNextStep();
+    }
   }
 
   void onCellTapped(Point point) {
@@ -26,6 +37,9 @@ class GameModel {
       _setSymbol(point);
       _checkWinner(point);
     }
+  }
+
+  void opponentMove() {
     if (nextSymbol != TicTacSymbol.none && board.gameWithComp) {
       compNextStep();
     }
