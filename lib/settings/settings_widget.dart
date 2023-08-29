@@ -10,7 +10,10 @@ import 'package:tic_tac_game/settings/selecting_game_type_widget.dart';
 import 'package:tic_tac_game/settings/selecting_game_with_comp_widget.dart';
 import 'package:tic_tac_game/settings/level_bloc/bloc_event.dart';
 import 'package:tic_tac_game/settings/selecting_level_widget.dart';
+import 'package:tic_tac_game/settings/selecting_sound_widget.dart';
 import 'package:tic_tac_game/settings/selecting_who_first_widget.dart';
+import 'package:tic_tac_game/settings/sound/bloc_event.dart';
+import 'package:tic_tac_game/settings/sound/settings_bloc.dart';
 import 'package:tic_tac_game/settings/who_first_bloc/bloc_event.dart';
 import 'package:tic_tac_game/settings/who_first_bloc/settings_bloc.dart';
 
@@ -54,6 +57,13 @@ abstract class SettingsWidget extends StatelessWidget {
                   GetWhoFirst(),
                 ),
               ),
+              BlocProvider<SettingsSoundBloc>(
+                create: (context) => SettingsSoundBloc(
+                  gameRepository: context.read<GameRepository>(),
+                )..add(
+                  GetSound(),
+                ),
+              ),
             ], child: SettingsLayout(getBackLink()))));
   }
 
@@ -73,18 +83,22 @@ class SettingsLayout extends StatelessWidget {
         centerTitle: true,
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SettingsLevelWidget(),
-            const SettingsGameWithCompWidget(),
-            const SettingsGameTypeWidget(),
-            const SettingsWhoFirstWidget(),
-            OutlinedButton(
-                onPressed: () => context.go(backLink),
-                child: const Text('Back')),
-          ],
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SettingsLevelWidget(),
+              const SettingsGameWithCompWidget(),
+              const SettingsGameTypeWidget(),
+              const SettingsWhoFirstWidget(),
+              const SettingsSoundWidget(),
+              OutlinedButton(
+                  onPressed: () => context.go(backLink),
+                  child: const Text('Back')),
+            ],
+          ),
         ),
       ),
     );

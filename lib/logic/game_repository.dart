@@ -26,6 +26,10 @@ abstract class GameRepository {
   Future<bool> isGameWithComp();
 
   Future<void> setGameWithComp(bool value);
+
+  Future<bool> isSoundOn();
+
+  Future<void> setSoundOn(bool value);
 }
 
 class GameRepositoryImpl extends GameRepository {
@@ -177,5 +181,18 @@ class GameRepositoryImpl extends GameRepository {
   Future<void> setGameWithComp(bool value) async {
     final SharedPreferences prefs = await _prefs;
     prefs.setBool("game_with_comp", value);
+  }
+
+  @override
+  Future<bool> isSoundOn()async {
+    final SharedPreferences prefs = await _prefs;
+    bool type = prefs.getBool("sound_on") ?? true;
+    return type;
+  }
+
+  @override
+  Future<void> setSoundOn(bool value)async {
+    final SharedPreferences prefs = await _prefs;
+    prefs.setBool("sound_on", value);
   }
 }
