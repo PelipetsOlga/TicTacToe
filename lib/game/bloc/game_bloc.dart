@@ -66,7 +66,7 @@ class GameModelBloc extends Bloc<GameModelEvent, GameModelState> {
         gameModel: gameModel,
       ),
     );
-    await Future.delayed(const Duration(milliseconds: 1000));
+    await Future.delayed(const Duration(milliseconds: 500));
     final gameModel2 = gameRepository.opponentMove();
     emit(
       state.copyWith(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'game_with_comp_bloc/bloc_event.dart';
 import 'game_with_comp_bloc/bloc_state.dart';
@@ -13,7 +14,7 @@ class SettingsGameWithCompWidget extends StatelessWidget {
     return BlocBuilder<SettingsGameWithCompBloc, GameWithCompState>(
       buildWhen: (previous, current) => current.status.isSuccess,
       builder: (context, state) {
-        return GameWithCompSelectionWidget();
+        return const GameWithCompSelectionWidget();
       },
     );
   }
@@ -30,48 +31,21 @@ class GameWithCompSelectionWidget extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: [
-            Text(
+            const Text(
               'Game With Phone or with Friend',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             GestureDetector(
-              child: Text(
-                'With Phone',
-                style: TextStyle(
-                  color: state.gameWithComp
-                      ? Colors.amber
-                      : Colors.grey,
-                  fontWeight: state.gameWithComp
-                      ? FontWeight.bold
-                      : FontWeight.normal,
-                ),
+              child: SvgPicture.asset(
+                state.gameWithComp
+                    ? 'assets/dog_with_phone.svg'
+                    : 'assets/two_dogs.svg',
+                semanticsLabel: 'Image',
               ),
               onTap: () async {
                 context.read<SettingsGameWithCompBloc>().add(
-                  SelectGameWithComp(
-                       gameWithComp: true
-                      ),
+                      SelectGameWithComp(gameWithComp: !state.gameWithComp),
                     );
-              },
-            ),
-            GestureDetector(
-              child: Text(
-                'With Friend',
-                style: TextStyle(
-                  color: !state.gameWithComp
-                      ? Colors.amber
-                      : Colors.grey,
-                  fontWeight: !state.gameWithComp
-                      ? FontWeight.bold
-                      : FontWeight.normal,
-                ),
-              ),
-              onTap: () async {
-                context.read<SettingsGameWithCompBloc>().add(
-                  SelectGameWithComp(
-                      gameWithComp: false
-                  ),
-                );
               },
             ),
           ],

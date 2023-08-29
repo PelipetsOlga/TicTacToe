@@ -72,6 +72,8 @@ flutter:
     - assets/board_300_4_4.svg
     - assets/board_300_5_5.svg
     - assets/board_300_6_6.svg
+    - assets/dog_with_phone.svg
+    - assets/two_dogs.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
