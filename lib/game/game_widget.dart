@@ -16,17 +16,23 @@ class GameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-        create: (context) => GetIt.instance.get<GameRepository>(),
-        child: MultiBlocProvider(providers: [
-          BlocProvider<GameModelBloc>(
-            create: (context) => GameModelBloc(
-              gameRepository: context.read<GameRepository>(),
-            )..add(
-                GetGameModel(),
-              ),
-          ),
-        ], child: const GameLayoutProvider()));
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Game Screen'),
+      ),
+      body: RepositoryProvider(
+          create: (context) => GetIt.instance.get<GameRepository>(),
+          child: MultiBlocProvider(providers: [
+            BlocProvider<GameModelBloc>(
+              create: (context) => GameModelBloc(
+                gameRepository: context.read<GameRepository>(),
+              )..add(
+                  GetGameModel(),
+                ),
+            ),
+          ], child: const GameLayoutProvider())),
+    );
   }
 }
 
@@ -58,11 +64,8 @@ class GameLayout extends StatelessWidget {
       iconData = Icons.circle_outlined;
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tic Tac Toe Game'),
-      ),
-      body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+    return Center(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         const Text("Next Step"),
         SizedBox(
           width: 64,
@@ -79,10 +82,7 @@ class GameLayout extends StatelessWidget {
             },
             child: const Icon(Icons.refresh_outlined)),
         OutlinedButton(
-            onPressed: () => context.go('/game_settings'),
-            child: const Text('Settings')),
-        OutlinedButton(
-            onPressed: () => context.go('/'), child: const Text('Back')),
+            onPressed: () => context.pop(), child: const Text('Back')),
       ]),
     );
   }

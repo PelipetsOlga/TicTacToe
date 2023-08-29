@@ -20,85 +20,79 @@ import 'package:tic_tac_game/settings/who_first_bloc/settings_bloc.dart';
 import 'game_type_bloc/settings_bloc.dart';
 import 'level_bloc/settings_bloc.dart';
 
-abstract class SettingsWidget extends StatelessWidget {
+class SettingsWidget extends StatelessWidget {
   const SettingsWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: RepositoryProvider(
-            create: (context) => GetIt.instance.get<GameRepository>(),
-            child: MultiBlocProvider(providers: [
-              BlocProvider<SettingsLevelBloc>(
-                create: (context) => SettingsLevelBloc(
-                  gameRepository: context.read<GameRepository>(),
-                )..add(
-                    GetLevel(),
-                  ),
-              ),
-              BlocProvider<SettingsGameWithCompBloc>(
-                create: (context) => SettingsGameWithCompBloc(
-                  gameRepository: context.read<GameRepository>(),
-                )..add(
-                    GetGameWithComp(),
-                  ),
-              ),
-              BlocProvider<SettingsGameTypeBloc>(
-                create: (context) => SettingsGameTypeBloc(
-                  gameRepository: context.read<GameRepository>(),
-                )..add(
-                  GetGameType(),
-                ),
-              ),
-              BlocProvider<SettingsWhoFirstBloc>(
-                create: (context) => SettingsWhoFirstBloc(
-                  gameRepository: context.read<GameRepository>(),
-                )..add(
-                  GetWhoFirst(),
-                ),
-              ),
-              BlocProvider<SettingsSoundBloc>(
-                create: (context) => SettingsSoundBloc(
-                  gameRepository: context.read<GameRepository>(),
-                )..add(
-                  GetSound(),
-                ),
-              ),
-            ], child: SettingsLayout(getBackLink()))));
-  }
-
-  String getBackLink();
-}
-
-class SettingsLayout extends StatelessWidget {
-  String backLink;
-
-  SettingsLayout(this.backLink, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
-        centerTitle: true,
+        title: const Text('Settings Screen'),
+        automaticallyImplyLeading: false,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SettingsLevelWidget(),
-              const SettingsGameWithCompWidget(),
-              const SettingsGameTypeWidget(),
-              const SettingsWhoFirstWidget(),
-              const SettingsSoundWidget(),
-              OutlinedButton(
-                  onPressed: () => context.go(backLink),
-                  child: const Text('Back')),
-            ],
-          ),
+      body: RepositoryProvider(
+          create: (context) => GetIt.instance.get<GameRepository>(),
+          child: MultiBlocProvider(providers: [
+            BlocProvider<SettingsLevelBloc>(
+              create: (context) => SettingsLevelBloc(
+                gameRepository: context.read<GameRepository>(),
+              )..add(
+                  GetLevel(),
+                ),
+            ),
+            BlocProvider<SettingsGameWithCompBloc>(
+              create: (context) => SettingsGameWithCompBloc(
+                gameRepository: context.read<GameRepository>(),
+              )..add(
+                  GetGameWithComp(),
+                ),
+            ),
+            BlocProvider<SettingsGameTypeBloc>(
+              create: (context) => SettingsGameTypeBloc(
+                gameRepository: context.read<GameRepository>(),
+              )..add(
+                  GetGameType(),
+                ),
+            ),
+            BlocProvider<SettingsWhoFirstBloc>(
+              create: (context) => SettingsWhoFirstBloc(
+                gameRepository: context.read<GameRepository>(),
+              )..add(
+                  GetWhoFirst(),
+                ),
+            ),
+            BlocProvider<SettingsSoundBloc>(
+              create: (context) => SettingsSoundBloc(
+                gameRepository: context.read<GameRepository>(),
+              )..add(
+                  GetSound(),
+                ),
+            ),
+          ], child: const SettingsLayout())),
+    );
+  }
+}
+
+class SettingsLayout extends StatelessWidget {
+  const SettingsLayout({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SettingsLevelWidget(),
+            const SettingsGameWithCompWidget(),
+            const SettingsGameTypeWidget(),
+            const SettingsWhoFirstWidget(),
+            const SettingsSoundWidget(),
+            OutlinedButton(
+                onPressed: () => context.pop(), child: const Text('Back')),
+          ],
         ),
       ),
     );
