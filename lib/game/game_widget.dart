@@ -71,7 +71,8 @@ class GameLayout extends StatelessWidget {
         ),
         BoardWidget(viewModel.board, (point) {
           context.read<GameModelBloc>().add(OnCellTapped(point));
-        }),
+        }, viewModel.gameType.boardBackgroundImage,
+            viewModel.gameType.cellSize),
         OutlinedButton(
             onPressed: () {
               context.read<GameModelBloc>().add(ResetGameModel());

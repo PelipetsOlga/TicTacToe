@@ -6,8 +6,29 @@ class CellWidget extends StatelessWidget {
   TicTacSymbol symbol;
   VoidCallback callback;
   bool isWinner;
+  double cellSize;
+  late Widget svg1;
+  late Widget svg2;
 
-  CellWidget(this.symbol, this.callback, this.isWinner, {super.key});
+  CellWidget(this.symbol, this.callback, this.isWinner, this.cellSize,
+      {super.key}) {
+    svg1 = Padding(
+      padding: const EdgeInsets.all(6.0),
+      child: SvgPicture.asset(
+        assetName1,
+        semanticsLabel: 'Cross',
+        fit: BoxFit.contain,
+      ),
+    );
+    svg2 = Padding(
+      padding: const EdgeInsets.all(6.0),
+      child: SvgPicture.asset(
+        assetName2,
+        semanticsLabel: 'Zero',
+        fit: BoxFit.contain,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,16 +38,16 @@ class CellWidget extends StatelessWidget {
     } else if (symbol == TicTacSymbol.oval) {
       iconData = svg2;
     } else {
-      iconData = const SizedBox(width: 88, height: 88);
+      iconData = SizedBox(width: cellSize, height: cellSize);
     }
 
     return GestureDetector(
       onTap: callback,
       child: Padding(
-        padding: const EdgeInsets.all(6.0),
+        padding: const EdgeInsets.all(3.0),
         child: Container(
-          width: 88,
-          height: 88,
+          width: cellSize - 6,
+          height: cellSize - 6,
           color: isWinner ? Colors.amberAccent : Colors.transparent,
           child: iconData,
         ),
@@ -37,21 +58,3 @@ class CellWidget extends StatelessWidget {
 
 const String assetName1 = 'assets/dog_ic.svg';
 const String assetName2 = 'assets/rain.svg';
-final Widget svg1 = Padding(
-  padding: const EdgeInsets.all(8.0),
-  child:   SvgPicture.asset(
-    assetName1,
-    semanticsLabel: 'Cross',
-    width: 48,
-    height: 48,
-  ),
-);
-final Widget svg2 = Padding(
-  padding: const EdgeInsets.all(8.0),
-  child:   SvgPicture.asset(
-    assetName2,
-    semanticsLabel: 'Zero',
-    width: 48,
-    height: 48,
-  ),
-);

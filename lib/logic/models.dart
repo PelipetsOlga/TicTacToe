@@ -11,7 +11,6 @@ enum WhosTurnBeFirst { me, opponent, alternately }
 enum GameType { g_3_3_3, g_4_4_3, g_5_5_3, g_5_5_4, g_5_5_5, g_6_6_4 }
 
 extension GameTypeExtension on GameType {
-
   int get fieldSize {
     switch (this) {
       case GameType.g_3_3_3:
@@ -47,6 +46,44 @@ extension GameTypeExtension on GameType {
         return 4;
       default:
         return 3;
+    }
+  }
+
+  String get boardBackgroundImage {
+    switch (this) {
+      case GameType.g_3_3_3:
+        return 'assets/board_300_3_3.svg';
+      case GameType.g_4_4_3:
+        return 'assets/board_300_4_4.svg';
+      case GameType.g_5_5_3:
+        return 'assets/board_300_5_5.svg';
+      case GameType.g_5_5_4:
+        return 'assets/board_300_5_5.svg';
+      case GameType.g_5_5_5:
+        return 'assets/board_300_5_5.svg';
+      case GameType.g_6_6_4:
+        return 'assets/board_300_6_6.svg';
+      default:
+        return 'assets/board_300_3_3.svg';
+    }
+  }
+
+  int get cellSize {
+    switch (this) {
+      case GameType.g_3_3_3:
+        return 100;
+      case GameType.g_4_4_3:
+        return 75;
+      case GameType.g_5_5_3:
+        return 60;
+      case GameType.g_5_5_4:
+        return 60;
+      case GameType.g_5_5_5:
+        return 60;
+      case GameType.g_6_6_4:
+        return 50;
+      default:
+        return 100;
     }
   }
 }

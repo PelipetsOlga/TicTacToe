@@ -8,33 +8,43 @@ typedef CellTapCallback = void Function(Point point);
 class BoardWidget extends StatelessWidget {
   Board board;
   CellTapCallback callback;
+  String boardBackgroundImage;
+  int cellSize;
 
-  BoardWidget(this.board, this.callback, {super.key});
+  BoardWidget(
+      this.board, this.callback, this.boardBackgroundImage, this.cellSize,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
       Center(
         child: SvgPicture.asset(
-          'assets/board_3_3.svg',
+          boardBackgroundImage,
           semanticsLabel: 'Board',
           width: 300,
           height: 300,
+          fit: BoxFit.fill,
         ),
       ),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: chunk(board.cells, board.fieldSize)
-            .map((row) => Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: row
-                      .map((cell) => CellWidget(cell.symbol,
-                          () => callback(cell.point), cell.isWinner))
-                      .toList(),
-                ))
-            .toList(),
+      Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: chunk(board.cells, board.fieldSize)
+              .map((row) => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: row
+                        .map((cell) => CellWidget(
+                            cell.symbol,
+                            () => callback(cell.point),
+                            cell.isWinner,
+                            cellSize.toDouble()))
+                        .toList(),
+                  ))
+              .toList(),
+        ),
       ),
     ]);
   }
