@@ -55,7 +55,7 @@ class GameModel {
   }
 
   void _checkWinner(Point point) {
-    List<Cell> winner = _getWinner(point);
+    List<Cell> winner = _getWinner(point, nextSymbol);
     if (winner.length >= board.winLength) {
       _markWinner(winner);
       nextSymbol = TicTacSymbol.none;
@@ -80,37 +80,38 @@ class GameModel {
     }
   }
 
-  List<Cell> _getWinner(Point point) {
-    List<Cell> winner = _getWinnerHorizontals(point);
+  List<Cell> _getWinner(Point point, TicTacSymbol symbol) {
+    List<Cell> winner = _getWinnerHorizontals(point, symbol);
     if (winner.isEmpty) {
-      winner = _getWinnerVerticales(point);
+      winner = _getWinnerVerticales(point, symbol);
     }
     if (winner.isEmpty) {
-      winner = _getWinnerLeftDiagonal(point);
+      winner = _getWinnerLeftDiagonal(point, symbol);
     }
     if (winner.isEmpty) {
-      winner = _getWinnerRightDiagonal(point);
+      winner = _getWinnerRightDiagonal(point, symbol);
     }
     return winner;
   }
 
-  List<Cell> _getWinnerHorizontals(Point point) {
-    return _getLineHorizontal(point, board.winLength);
+  List<Cell> _getWinnerHorizontals(Point point, TicTacSymbol symbol) {
+    return _getLineHorizontal(point, board.winLength, symbol);
   }
 
-  List<Cell> _getWinnerVerticales(Point point) {
-    return _getLineVertical(point, board.winLength);
+  List<Cell> _getWinnerVerticales(Point point, TicTacSymbol symbol) {
+    return _getLineVertical(point, board.winLength, symbol);
   }
 
-  List<Cell> _getWinnerLeftDiagonal(Point point) {
-    return _getLineLeftDiagonal(point, board.winLength);
+  List<Cell> _getWinnerLeftDiagonal(Point point, TicTacSymbol symbol) {
+    return _getLineLeftDiagonal(point, board.winLength, symbol);
   }
 
-  List<Cell> _getWinnerRightDiagonal(Point point) {
-    return _getLineRightDiagonal(point, board.winLength);
+  List<Cell> _getWinnerRightDiagonal(Point point, TicTacSymbol symbol) {
+    return _getLineRightDiagonal(point, board.winLength, symbol);
   }
 
-  List<Cell> _getLineHorizontal(Point point, int maxLength) {
+  List<Cell> _getLineHorizontal(
+      Point point, int maxLength, TicTacSymbol symbol) {
     List<Cell> winner = [];
     winner.add(_getCell(point));
     for (int index = 1; index < board.fieldSize; index++) {
@@ -118,14 +119,14 @@ class GameModel {
         winner.addAll(board.cells.where((cell) =>
             cell.point.x == (point.x - index) &&
             cell.point.y == point.y &&
-            cell.symbol == nextSymbol));
+            cell.symbol == symbol));
       } on Exception catch (_) {}
 
       try {
         winner.addAll(board.cells.where((cell) =>
             cell.point.x == (point.x + index) &&
             cell.point.y == point.y &&
-            cell.symbol == nextSymbol));
+            cell.symbol == symbol));
       } on Exception catch (_) {}
     }
     if (winner.length < maxLength) return [];
@@ -138,7 +139,8 @@ class GameModel {
     }
   }
 
-  List<Cell> _getLineVertical(Point point, int lineLength) {
+  List<Cell> _getLineVertical(
+      Point point, int lineLength, TicTacSymbol symbol) {
     List<Cell> winner = [];
     winner.add(_getCell(point));
     for (int index = 1; index < board.fieldSize; index++) {
@@ -146,14 +148,14 @@ class GameModel {
         winner.addAll(board.cells.where((cell) =>
             cell.point.y == (point.y - index) &&
             cell.point.x == point.x &&
-            cell.symbol == nextSymbol));
+            cell.symbol == symbol));
       } on Exception catch (_) {}
 
       try {
         winner.addAll(board.cells.where((cell) =>
             cell.point.y == (point.y + index) &&
             cell.point.x == point.x &&
-            cell.symbol == nextSymbol));
+            cell.symbol == symbol));
       } on Exception catch (_) {}
     }
     if (winner.length < lineLength) return [];
@@ -166,7 +168,8 @@ class GameModel {
     }
   }
 
-  List<Cell> _getLineLeftDiagonal(Point point, int lineLength) {
+  List<Cell> _getLineLeftDiagonal(
+      Point point, int lineLength, TicTacSymbol symbol) {
     List<Cell> winner = [];
     winner.add(_getCell(point));
     for (int index = 1; index < board.fieldSize; index++) {
@@ -174,14 +177,14 @@ class GameModel {
         winner.addAll(board.cells.where((cell) =>
             cell.point.y == (point.y - index) &&
             cell.point.x == (point.x - index) &&
-            cell.symbol == nextSymbol));
+            cell.symbol == symbol));
       } on Exception catch (_) {}
 
       try {
         winner.addAll(board.cells.where((cell) =>
             cell.point.y == (point.y + index) &&
             cell.point.x == (point.x + index) &&
-            cell.symbol == nextSymbol));
+            cell.symbol == symbol));
       } on Exception catch (_) {}
     }
     if (winner.length < lineLength) return [];
@@ -194,7 +197,8 @@ class GameModel {
     }
   }
 
-  List<Cell> _getLineRightDiagonal(Point point, int lineLength) {
+  List<Cell> _getLineRightDiagonal(
+      Point point, int lineLength, TicTacSymbol symbol) {
     List<Cell> winner = [];
     winner.add(_getCell(point));
     for (int index = 1; index < board.fieldSize; index++) {
@@ -202,14 +206,14 @@ class GameModel {
         winner.addAll(board.cells.where((cell) =>
             cell.point.y == (point.y + index) &&
             cell.point.x == (point.x - index) &&
-            cell.symbol == nextSymbol));
+            cell.symbol == symbol));
       } on Exception catch (_) {}
 
       try {
         winner.addAll(board.cells.where((cell) =>
             cell.point.y == (point.y - index) &&
             cell.point.x == (point.x + index) &&
-            cell.symbol == nextSymbol));
+            cell.symbol == symbol));
       } on Exception catch (_) {}
     }
     if (winner.length < lineLength) return [];
@@ -237,7 +241,11 @@ class GameModel {
   }
 
   Point _calculateCompStep() {
-    if (_countAllSymbolCells(nextSymbol) == 0) {
+    if (_countAllSymbolCells(TicTacSymbol.oval) == 0 &&
+        _countAllSymbolCells(TicTacSymbol.cross) > 0 &&
+        level == Level.hard) {
+      return _calculateCompNextStep();
+    } else if (_countAllSymbolCells(TicTacSymbol.oval) == 0) {
       return _calculateCompFirstStep();
     } else {
       return _calculateCompNextStep();
@@ -259,44 +267,112 @@ class GameModel {
   }
 
   Point _calculateCompNextStep() {
-    List<Cell> existingMarkedCells =
-        board.cells.where((element) => element.symbol == nextSymbol).toList();
+    // I always play cross
+    // Opponent always play oval
 
-    //Find start and end of existing lines
-    for (int length = board.winLength - 1; length > 1; length--) {
-      List<Cell> suggestedCells = [];
+    List<Cell> opponentExistingMarkedCells = board.cells
+        .where((element) => element.symbol == TicTacSymbol.oval)
+        .toList();
 
-      for (Cell markedCell in existingMarkedCells) {
-        suggestedCells.addAll(_suggestedHorizontalCells(
-            _getLineHorizontal(markedCell.point, length)));
-        suggestedCells.addAll(_suggestedVerticalCells(
-            _getLineVertical(markedCell.point, length)));
-        suggestedCells.addAll(_suggestedLeftDiagonalCells(
-            _getLineLeftDiagonal(markedCell.point, length)));
-        suggestedCells.addAll(_suggestedRightDiagonalCells(
-            _getLineRightDiagonal(markedCell.point, length)));
-      } //
-      if (suggestedCells.isNotEmpty && suggestedCells.length > 1) {
-        return getTheMostPopular(suggestedCells).point;
-      } else if (suggestedCells.isNotEmpty && suggestedCells.length > 1) {
-        return suggestedCells.first.point;
+    List<Cell> myExistingMarkedCells = board.cells
+        .where((element) => element.symbol == TicTacSymbol.cross)
+        .toList();
+
+    List<Cell> mySuggestedCells = [];
+    List<Cell> myNeighbourCells = [];
+    List<Cell> myFinalSuggestedCells = [];
+
+    if (level != Level.easy) {
+      // Calculate my suggested cells to continue existing lines
+      for (int length = board.winLength - 1; length > 1; length--) {
+        for (Cell markedCell in myExistingMarkedCells) {
+          var suggestedHorizontalCells = _suggestedHorizontalCells(
+              _getLineHorizontal(markedCell.point, length, TicTacSymbol.cross));
+          for (int i = 0; i < length; i++) {
+            mySuggestedCells.addAll(suggestedHorizontalCells);
+          }
+
+          var suggestedVerticalCells = _suggestedVerticalCells(
+              _getLineVertical(markedCell.point, length, TicTacSymbol.cross));
+          for (int i = 0; i < length; i++) {
+            mySuggestedCells.addAll(suggestedVerticalCells);
+          }
+
+          var suggestedLeftDiagonalCells = _suggestedLeftDiagonalCells(
+              _getLineLeftDiagonal(
+                  markedCell.point, length, TicTacSymbol.cross));
+          for (int i = 0; i < length; i++) {
+            mySuggestedCells.addAll(suggestedLeftDiagonalCells);
+          }
+
+          var suggestedRightDiagonalCells = _suggestedRightDiagonalCells(
+              _getLineRightDiagonal(
+                  markedCell.point, length, TicTacSymbol.cross));
+          for (int i = 0; i < length; i++) {
+            mySuggestedCells.addAll(suggestedRightDiagonalCells);
+          }
+        }
       }
-      //}
     }
 
-    //Find cells around existing cells
-    List<Cell> suggestedNeighbourCells = [];
-    for (var cell in existingMarkedCells) {
-      suggestedNeighbourCells.addAll(_getNeighbourEmptyCells(cell));
-    }
-    if (suggestedNeighbourCells.isNotEmpty &&
-        suggestedNeighbourCells.length > 1) {
-      return getTheMostPopular(suggestedNeighbourCells).point;
-    } else if (suggestedNeighbourCells.isNotEmpty) {
-      return suggestedNeighbourCells.first.point;
+    // Calculate my suggested cells around my single cells
+    if (level == Level.hard) {
+      for (var cell in myExistingMarkedCells) {
+        myNeighbourCells.addAll(_getNeighbourEmptyCells(cell));
+      }
     }
 
-    return const Point(0, 0);
+    myFinalSuggestedCells.addAll(mySuggestedCells);
+    myFinalSuggestedCells.addAll(myNeighbourCells);
+
+    //Find start and end of opponent's existing lines
+    for (int length = board.winLength - 1; length > 1; length--) {
+      List<Cell> opponentSuggestedCells = [];
+
+      for (Cell markedCell in opponentExistingMarkedCells) {
+        var suggestedHorizontalCells = _suggestedHorizontalCells(
+            _getLineHorizontal(markedCell.point, length, TicTacSymbol.oval));
+        for (int i = 0; i < length; i++) {
+          opponentSuggestedCells.addAll(suggestedHorizontalCells);
+        }
+
+        var suggestedVerticalCells = _suggestedVerticalCells(
+            _getLineVertical(markedCell.point, length, TicTacSymbol.oval));
+        for (int i = 0; i < length; i++) {
+          opponentSuggestedCells.addAll(suggestedVerticalCells);
+        }
+
+        var suggestedLeftDiagonalCells = _suggestedLeftDiagonalCells(
+            _getLineLeftDiagonal(markedCell.point, length, TicTacSymbol.oval));
+        for (int i = 0; i < length; i++) {
+          opponentSuggestedCells.addAll(suggestedLeftDiagonalCells);
+        }
+
+        var suggestedRightDiagonalCells = _suggestedRightDiagonalCells(
+            _getLineRightDiagonal(markedCell.point, length, TicTacSymbol.oval));
+        for (int i = 0; i < length; i++) {
+          opponentSuggestedCells.addAll(suggestedRightDiagonalCells);
+        }
+      }
+
+      // If opponent has lines then his move is to continue them
+      if (opponentSuggestedCells.isNotEmpty) {
+        opponentSuggestedCells.addAll(myFinalSuggestedCells);
+        return getTheMostPopular(opponentSuggestedCells).point;
+      }
+    }
+
+    //If opponent does't have lines, then find cells around his existing cells
+    List<Cell> opponentSuggestedNeighbourCells = [];
+    for (var cell in opponentExistingMarkedCells) {
+      opponentSuggestedNeighbourCells.addAll(_getNeighbourEmptyCells(cell));
+    }
+    if (opponentSuggestedNeighbourCells.isNotEmpty) {
+      opponentSuggestedNeighbourCells.addAll(myFinalSuggestedCells);
+      return getTheMostPopular(opponentSuggestedNeighbourCells).point;
+    }
+
+    return getTheMostPopular(myFinalSuggestedCells).point;
   }
 
   List<Cell> _getNeighbourEmptyCells(Cell cell) {
