@@ -332,25 +332,25 @@ class GameModel {
       for (Cell markedCell in opponentExistingMarkedCells) {
         var suggestedHorizontalCells = _suggestedHorizontalCells(
             _getLineHorizontal(markedCell.point, length, TicTacSymbol.oval));
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i <= length; i++) {
           opponentSuggestedCells.addAll(suggestedHorizontalCells);
         }
 
         var suggestedVerticalCells = _suggestedVerticalCells(
             _getLineVertical(markedCell.point, length, TicTacSymbol.oval));
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i <= length; i++) {
           opponentSuggestedCells.addAll(suggestedVerticalCells);
         }
 
         var suggestedLeftDiagonalCells = _suggestedLeftDiagonalCells(
             _getLineLeftDiagonal(markedCell.point, length, TicTacSymbol.oval));
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i <= length; i++) {
           opponentSuggestedCells.addAll(suggestedLeftDiagonalCells);
         }
 
         var suggestedRightDiagonalCells = _suggestedRightDiagonalCells(
             _getLineRightDiagonal(markedCell.point, length, TicTacSymbol.oval));
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i <= length; i++) {
           opponentSuggestedCells.addAll(suggestedRightDiagonalCells);
         }
       }
